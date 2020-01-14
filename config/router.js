@@ -1,4 +1,4 @@
-const routes = [
+const router = [
   {
     path: '/user',
     component: '../layouts/UserLayout',
@@ -25,16 +25,27 @@ const routes = [
           },
           {
             path: '/welcome',
-            name: 'welcome',
+            name: '广告管理',
             icon: 'smile',
             component: './Welcome',
           },
           {
-            path: '/admin',
-            name: 'admin',
-            icon: 'crown',
-            component: './Admin',
-            authority: ['admin'],
+            path: '/dancer',
+            name: '投票管理',
+            icon: 'heart',
+            routes: [
+              {
+                path: '/dancer/manager',
+                name: '投票列表',
+                component: './Dance',
+              },
+              {
+                path: '/dancer/detail',
+                name: '投票详情',
+                component: './DanceDetail',
+                hideInMenu: true,
+              },
+            ],
           },
           {
             component: './404',
@@ -50,4 +61,4 @@ const routes = [
     component: './404',
   },
 ];
-export default routes;
+export default router;
