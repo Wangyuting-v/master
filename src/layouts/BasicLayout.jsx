@@ -160,7 +160,7 @@ const BasicLayout = props => {
       }}
       footerRender={footerRender}
       menuDataRender={menuDataRender}
-      formatMessage={formatMessage}
+      // formatMessage={formatMessage}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}

@@ -40,7 +40,7 @@ const router = [
                 component: './Dance',
               },
               {
-                path: '/dancer/detail',
+                path: '/dancer/detail/:id',
                 name: '投票详情',
                 component: './DanceDetail',
                 hideInMenu: true,

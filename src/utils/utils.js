@@ -53,3 +53,12 @@ export const getRouteAuthority = (path, routeData) => {
   });
   return authorities;
 };
+
+export function obj2params(options) {
+  let paramStr = '';
+  for (const item in options) {
+    if (options[item]) paramStr += `${item}=${encodeURIComponent(options[item])}&`;
+  }
+  paramStr = paramStr.substring(0, paramStr.length - 1);
+  return paramStr;
+}

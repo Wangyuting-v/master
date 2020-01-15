@@ -47,20 +47,7 @@ class PicturesWall extends React.Component {
     currentPage: 1,
     previewVisible: false,
     previewImage: '',
-    fileList: [
-      {
-        uid: '-3',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-4',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ],
+    fileList: [],
   };
 
   componentDidMount() {
@@ -68,7 +55,6 @@ class PicturesWall extends React.Component {
   }
 
   seachDancer = () => {
-    console.log('开始调的接口：');
     const { dispatch } = this.props;
     const { pageSize, currentPage } = this.state;
     dispatch({
@@ -80,7 +66,6 @@ class PicturesWall extends React.Component {
   // 新增||编辑广告文本
   addInput = (type, id) => {
     const { inputText } = this.state;
-    console.log('类型----', type, inputText);
     if (!inputText) {
       message.info('请输入文本内容');
     } else {
@@ -126,34 +111,19 @@ class PicturesWall extends React.Component {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-
     this.setState({
       previewImage: file.url || file.preview,
       previewVisible: true,
     });
   };
 
-  // 图片上传
-  doUpload = info => {
-    const { fetch } = this.props;
-    console.log('图片的信息：', info);
-    // const data = new FormData();
-    // data.append('file', info.file);
-    const result = getServerBypostImg('/file/minio/upload', info);
-    result
-      .then(res => {
-        return res;
-      })
-      .then(json => {
-        console.log('上传信息res--：', json);
-      });
+  handleChange = ({ file, fileList }) => {
+    console.log('fileList:', fileList);
+    this.setState({ fileList });
   };
-
-  handleChange = ({ fileList }) => this.setState({ fileList });
 
   // 广告输入框的内容
   inputBoxChage = e => {
-    console.log('广告文本内容：', e.target.value);
     this.setState({ inputText: e.target.value });
   };
 
@@ -166,7 +136,6 @@ class PicturesWall extends React.Component {
       })
       .then(json => {
         if (json) {
-          console.log('删除的结果：', json.success);
           if (json.success) {
             message.info('删除成功！');
             this.seachDancer();
@@ -193,13 +162,11 @@ class PicturesWall extends React.Component {
                 <a
                   onClick={() => {
                     const that = this;
-                    console.log('编辑', record);
                     that.setState(
                       {
                         defaultDetail: record,
                       },
                       () => {
-                        console.log('编辑2', record);
                         const inputUpdate = (
                           <div>
                             <TextArea
@@ -213,12 +180,9 @@ class PicturesWall extends React.Component {
                           title: '请编辑广告文本',
                           content: inputUpdate,
                           onOk() {
-                            console.log('ok');
                             that.addInput('edit', val);
                           },
-                          onCancel() {
-                            console.log('Cancel');
-                          },
+                          onCancel() {},
                         });
                       },
                     );
@@ -235,7 +199,6 @@ class PicturesWall extends React.Component {
                       okText: '确认',
                       cancelText: '取消',
                       onOk() {
-                        console.log('点确认的按钮', record);
                         that.deleteDesc(val);
                       },
                       onCancel() {},
@@ -269,12 +232,9 @@ class PicturesWall extends React.Component {
               title: '请填写广告文本',
               content: inputBox,
               onOk() {
-                console.log('ok');
                 that.addInput();
               },
-              onCancel() {
-                console.log('Cancel');
-              },
+              onCancel() {},
             });
           }}
         >
@@ -285,7 +245,6 @@ class PicturesWall extends React.Component {
   }
 
   render() {
-    console.log('welcome---', this.props.welcome);
     const { list, current, pageSize, total } = this.props.welcome;
     const { previewVisible, previewImage, fileList, defaultDetail } = this.state;
     const uploadButton = (
@@ -307,17 +266,13 @@ class PicturesWall extends React.Component {
               marginBottom: 24,
             }}
           />
+
           <Upload
+            action="http://122.51.140.39:2435/file/minio/upload"
             listType="picture-card"
             fileList={fileList}
-            customRequest={this.doUpload}
             onPreview={this.handlePreview}
             onChange={this.handleChange}
-            showUploadList={{
-              showPreviewIcon: true,
-              showRemoveIcon: true,
-              showDownloadIcon: false,
-            }}
           >
             {fileList.length >= 3 ? null : uploadButton}
           </Upload>
