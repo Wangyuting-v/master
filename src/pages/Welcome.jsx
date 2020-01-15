@@ -20,7 +20,12 @@ import {
 } from 'antd';
 const { TextArea } = Input;
 import styles from './Welcome.less';
-import { getServerBySsoLogout, getServerBydelete, getServerByput } from '../services/getServerData';
+import {
+  getServerBySsoLogout,
+  getServerBydelete,
+  getServerByput,
+  getServerBypostImg,
+} from '../services/getServerData';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -43,19 +48,6 @@ class PicturesWall extends React.Component {
     previewVisible: false,
     previewImage: '',
     fileList: [
-      {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url:
-          'https://6c69-little-king-0115-1300440877.tcb.qcloud.la/WechatIMG247.jpeg?sign=294afa93715c703d5b64055f88ea691f&t=1578735955',
-      },
-      {
-        uid: '-2',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
       {
         uid: '-3',
         name: 'image.png',
@@ -141,6 +133,22 @@ class PicturesWall extends React.Component {
     });
   };
 
+  // 图片上传
+  doUpload = info => {
+    const { fetch } = this.props;
+    console.log('图片的信息：', info);
+    // const data = new FormData();
+    // data.append('file', info.file);
+    const result = getServerBypostImg('/file/minio/upload', info);
+    result
+      .then(res => {
+        return res;
+      })
+      .then(json => {
+        console.log('上传信息res--：', json);
+      });
+  };
+
   handleChange = ({ fileList }) => this.setState({ fileList });
 
   // 广告输入框的内容
@@ -168,24 +176,6 @@ class PicturesWall extends React.Component {
         }
       });
   };
-
-  uploadButton = () => {
-    return (
-      <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
-  };
-
-  inputBox = () => {
-    return (
-      <div>
-        <TextArea rows={4} onChange={this.inputBoxChage} />
-      </div>
-    );
-  };
-
   getColumns() {
     return [
       {
@@ -298,6 +288,12 @@ class PicturesWall extends React.Component {
     console.log('welcome---', this.props.welcome);
     const { list, current, pageSize, total } = this.props.welcome;
     const { previewVisible, previewImage, fileList, defaultDetail } = this.state;
+    const uploadButton = (
+      <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
     return (
       <div className="clearfix">
         <Card>
@@ -312,13 +308,18 @@ class PicturesWall extends React.Component {
             }}
           />
           <Upload
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             listType="picture-card"
             fileList={fileList}
+            customRequest={this.doUpload}
             onPreview={this.handlePreview}
             onChange={this.handleChange}
+            showUploadList={{
+              showPreviewIcon: true,
+              showRemoveIcon: true,
+              showDownloadIcon: false,
+            }}
           >
-            {fileList.length >= 8 ? null : this.uploadButton}
+            {fileList.length >= 3 ? null : uploadButton}
           </Upload>
           <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
             <img alt="example" style={{ width: '100%' }} src={previewImage} />

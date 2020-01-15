@@ -1,6 +1,6 @@
 import request from '../utils/request';
 import requestBySso from '../utils/requestBySso';
-//import requestExpon from '../utils/request3';
+import requestByFile from '../utils/requestByFile';
 
 function obj2params(obj) {
   let result = '';
@@ -49,6 +49,14 @@ export async function getServerBypost(url, data) {
   const resp = await request(url, {
     method: 'POST',
     body: data,
+  });
+  return resp;
+}
+
+export async function getServerBypostImg(url, data) {
+  const resp = await requestByFile(url, {
+    method: 'POST',
+    data,
   });
   return resp;
 }
