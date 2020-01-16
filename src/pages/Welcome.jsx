@@ -20,12 +20,7 @@ import {
 } from 'antd';
 const { TextArea } = Input;
 import styles from './Welcome.less';
-import {
-  getServerBySsoLogout,
-  getServerBydelete,
-  getServerByput,
-  getServerBypostImg,
-} from '../services/getServerData';
+import { getServerBySsoLogout, getServerBydelete, getServerByput } from '../services/getServerData';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -60,6 +55,21 @@ class PicturesWall extends React.Component {
     dispatch({
       type: 'welcome/search',
       payload: { pageSize: pageSize, currentPage: currentPage },
+    });
+    dispatch({
+      type: 'welcome/search',
+      payload: { pageSize: pageSize, currentPage: currentPage, putArea: 'BANNER' },
+    }).then(res => {
+      const fileList = [];
+      res.list.map((item, index) => {
+        fileList.push({
+          uid: item.id,
+          url: item.content,
+          status: 'done',
+        });
+        this.setState({ headImg: res.list[0].content });
+      });
+      this.setState({ fileList });
     });
   };
 
@@ -118,10 +128,33 @@ class PicturesWall extends React.Component {
   };
 
   handleChange = ({ file, fileList }) => {
-    console.log('fileList:', fileList);
     this.setState({ fileList });
+    if (file.response && file.status === 'done') {
+      const params = {
+        putArea: 'BANNER',
+        type: 'IMG',
+        content: file.response.data,
+      };
+      getServerBySsoLogout('/ads', params).then(res => {
+        if (res.success) {
+          message.success('添加成功！');
+          this.seachDancer();
+        } else {
+          message.error(res.message);
+        }
+      });
+    }
   };
-
+  handleRemove = file => {
+    getServerBydelete('/ads/' + file.uid).then(res => {
+      if (res.success) {
+        message.info('删除成功！');
+        this.seachDancer();
+      } else {
+        message.info(res.message);
+      }
+    });
+  };
   // 广告输入框的内容
   inputBoxChage = e => {
     this.setState({ inputText: e.target.value });
@@ -130,20 +163,16 @@ class PicturesWall extends React.Component {
   // 删除广告语
   deleteDesc = id => {
     const result = getServerBydelete('/ads/' + id);
-    result
-      .then(res => {
-        return res;
-      })
-      .then(json => {
-        if (json) {
-          if (json.success) {
-            message.info('删除成功！');
-            this.seachDancer();
-          } else {
-            message.info(json.message);
-          }
+    result.then(json => {
+      if (json) {
+        if (json.success) {
+          message.info('删除成功！');
+          this.seachDancer();
+        } else {
+          message.info(json.message);
         }
-      });
+      }
+    });
   };
   getColumns() {
     return [
@@ -244,6 +273,11 @@ class PicturesWall extends React.Component {
     );
   }
 
+  pageSizeChange = (current, pageSize) => {
+    this.setState({ currentPage: current, pageSize }, () => {
+      this.seachDancer();
+    });
+  };
   render() {
     const { list, current, pageSize, total } = this.props.welcome;
     const { previewVisible, previewImage, fileList, defaultDetail } = this.state;
@@ -273,6 +307,8 @@ class PicturesWall extends React.Component {
             fileList={fileList}
             onPreview={this.handlePreview}
             onChange={this.handleChange}
+            onRemove={this.handleRemove}
+            showUploadList={{ showDownloadIcon: false }}
           >
             {fileList.length >= 3 ? null : uploadButton}
           </Upload>
@@ -296,7 +332,18 @@ class PicturesWall extends React.Component {
               marginBottom: 24,
             }}
           />
-          <Table dataSource={list} columns={this.getColumns()} />
+          <Table
+            dataSource={list}
+            columns={this.getColumns()}
+            pagination={{
+              showSizeChanger: true,
+              onChange: this.pageSizeChange,
+              onShowSizeChange: this.pageSizeChange,
+              current: current || 1,
+              pageSize: pageSize || 20,
+              total: total || 0,
+            }}
+          />
         </Card>
       </div>
     );

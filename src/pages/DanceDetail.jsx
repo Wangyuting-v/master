@@ -45,7 +45,6 @@ class TeamList extends React.Component {
   handleSearch = (pageNumber, pageSize) => {
     const { sort } = this.state;
     const { id } = this.props.match.params;
-    console.log('props:', this.props);
     this.props.dispatch({ type: 'team/search', payload: { pageSize, pageNumber, sort, id } });
   };
   handleAdd = values => {
@@ -105,9 +104,10 @@ class TeamList extends React.Component {
   showModal = formValues => {
     this.setState({ visible: true });
     if (formValues) {
-      const { name, intro, headImgUrl } = formValues;
+      const { id, name, intro, headImgUrl } = formValues;
       this.props.form.setFieldsValue({ name, intro });
-      this.setState({ headImgUrl });
+      const fileList = [{ uid: id, url: headImgUrl, status: 'done' }];
+      this.setState({ headImgUrl, fileList });
     }
   };
   hideModal = () => {
@@ -126,14 +126,24 @@ class TeamList extends React.Component {
 
   handleChange = ({ file, fileList }) => {
     this.setState({ fileList });
-    if (fileList[0].response) {
-      this.setState({ headImgUrl: fileList[0].response.data });
+    if (file.response && file.status === 'done') {
+      this.setState({ headImgUrl: file.response.data });
     }
   };
 
   handleCancel = () => this.setState({ previewVisible: false });
+
+  pageSizeChange = (current, pageSize) => {
+    this.handleSearch(current, pageSize);
+  };
   render() {
     const columns = [
+      {
+        title: '头像',
+        dataIndex: 'headImgUrl',
+        key: 'headImgUrl',
+        render: val => <img src={val} alt="1" width="50px" height="50px" />,
+      },
       {
         title: '投票标题',
         dataIndex: 'name',
@@ -215,7 +225,18 @@ class TeamList extends React.Component {
     return (
       <div className="clearfix">
         <Card extra={extraAction}>
-          <Table dataSource={list} columns={columns} />
+          <Table
+            dataSource={list}
+            columns={columns}
+            pagination={{
+              showSizeChanger: true,
+              onChange: this.pageSizeChange,
+              onShowSizeChange: this.pageSizeChange,
+              current: current || 1,
+              pageSize: pageSize || 20,
+              total: total || 0,
+            }}
+          />
         </Card>
         <Modal
           visible={visible}
@@ -245,6 +266,8 @@ class TeamList extends React.Component {
                     fileList={fileList}
                     onPreview={this.handlePreview}
                     onChange={this.handleChange}
+                    // onRemove={this.handleRemove}
+                    showUploadList={{ showDownloadIcon: false }}
                   >
                     {fileList.length >= 1 ? null : uploadButton}
                   </Upload>

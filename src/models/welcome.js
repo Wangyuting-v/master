@@ -7,22 +7,30 @@ export default {
     current: 1,
     pageSize: 10,
     total: 0,
+    listBanner: [],
   },
 
   effects: {
     *search({ payload = {} }, { call, put }) {
       const data = yield call(welcomeService.search, payload);
-      console.log('data：', data);
-      yield put({
-        type: 'saveSearchedStaffs',
-        payload: data,
-      });
+
+      if (payload.putArea) {
+        yield put({
+          type: 'saveBanner',
+          payload: data,
+        });
+        return data;
+      } else {
+        yield put({
+          type: 'saveSearchedStaffs',
+          payload: data,
+        });
+      }
     },
   }, // end of effects
 
   reducers: {
     saveSearchedStaffs(state, { payload }) {
-      console.log('payload', payload);
       const { list, current, pageSize, total } = payload;
       return {
         ...state,
@@ -30,6 +38,14 @@ export default {
         current,
         pageSize,
         total,
+      };
+    },
+    saveBanner(state, { payload }) {
+      const { list, total } = payload;
+      return {
+        ...state,
+        listBanner: list,
+        totalBanner: total,
       };
     },
   },

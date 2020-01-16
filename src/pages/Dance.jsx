@@ -12,8 +12,9 @@ import {
   message,
   Icon,
   Upload,
+  Pagination,
 } from 'antd';
-import { Link, routerRedux } from 'dva/router';
+import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 
 const formItem = {
@@ -50,7 +51,6 @@ class DanceList extends React.Component {
   handleAdd = values => {
     const { dispatch } = this.props;
     dispatch({ type: 'dance/add', payload: values }).then(res => {
-      console.log('res:', res);
       if (res.success) {
         message.success('新增成功！');
         this.setState({ visible: false });
@@ -66,7 +66,6 @@ class DanceList extends React.Component {
     const { id } = this.state;
 
     dispatch({ type: 'dance/edit', payload: { ...values, id } }).then(res => {
-      console.log('res:', res);
       if (res.success) {
         message.success('编辑成功！');
         this.setState({ visible: false });
@@ -107,8 +106,10 @@ class DanceList extends React.Component {
   showModal = formValues => {
     this.setState({ visible: true });
     if (formValues) {
-      const { name, address } = formValues;
+      const { id, name, headImgUrl, address } = formValues;
       this.props.form.setFieldsValue({ name, address });
+      const fileList = [{ uid: id, url: headImgUrl, status: 'done' }];
+      this.setState({ headImgUrl, fileList });
     }
   };
   hideModal = () => {
@@ -125,16 +126,25 @@ class DanceList extends React.Component {
     });
   };
 
-  handleChange = ({ fileList }) => {
+  handleChange = ({ file, fileList }) => {
     this.setState({ fileList });
-    if (fileList[0].response) {
-      this.setState({ headImgUrl: fileList[0].response.data });
+    if (file.response && file.status === 'done') {
+      this.setState({ headImgUrl: file.response.data });
     }
   };
 
   handleCancel = () => this.setState({ previewVisible: false });
+  pageSizeChange = (current, pageSize) => {
+    this.handleSearch(current, pageSize);
+  };
   render() {
     const columns = [
+      {
+        title: '头像',
+        dataIndex: 'headImgUrl',
+        key: 'headImgUrl',
+        render: val => <img src={val} alt="1" width="50px" height="50px" />,
+      },
       {
         title: '投票标题',
         dataIndex: 'name',
@@ -218,7 +228,18 @@ class DanceList extends React.Component {
     return (
       <div className="clearfix">
         <Card extra={extraAction}>
-          <Table dataSource={list} columns={columns} />
+          <Table
+            dataSource={list}
+            columns={columns}
+            pagination={{
+              showSizeChanger: true,
+              onChange: this.pageSizeChange,
+              onShowSizeChange: this.pageSizeChange,
+              current: current || 1,
+              pageSize: pageSize || 20,
+              total: total || 0,
+            }}
+          />
         </Card>
         <Modal
           visible={visible}
@@ -248,6 +269,7 @@ class DanceList extends React.Component {
                     fileList={fileList}
                     onPreview={this.handlePreview}
                     onChange={this.handleChange}
+                    showUploadList={{ showDownloadIcon: false }}
                   >
                     {fileList.length >= 1 ? null : uploadButton}
                   </Upload>

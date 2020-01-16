@@ -18,14 +18,14 @@ async function search({ pageSize, pageNumber, sort, id }) {
 }
 
 async function add(params) {
-  let url = `/raceTeam?${obj2params(params)}`;
+  let url = `/raceTeam`;
 
   let resp = await request(url, { method: 'POST', body: params });
   return resp;
 }
 
 async function edit(params) {
-  let url = `/raceTeam?${obj2params(params)}`;
+  let url = `/raceTeam`;
 
   let resp = await request(url, { method: 'PUT', body: params });
   return resp;
