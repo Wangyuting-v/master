@@ -3,8 +3,8 @@ import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 // import store from '../index';
 
-// const API_URL_PREFIX = 'https://zcpost.cn';
-const API_URL_PREFIX = 'http://122.51.140.39:2435';
+const API_URL_PREFIX = 'https://zcpost.cn';
+//const API_URL_PREFIX = 'http://122.51.140.39:2435';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',

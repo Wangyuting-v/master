@@ -264,7 +264,7 @@ class DanceList extends React.Component {
               })(
                 <div>
                   <Upload
-                    action="http://122.51.140.39:2435/file/minio/upload"
+                    action="https://zcpost.cn/file/minio/upload"
                     listType="picture-card"
                     fileList={fileList}
                     onPreview={this.handlePreview}
