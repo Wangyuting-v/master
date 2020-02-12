@@ -227,7 +227,7 @@ class DanceList extends React.Component {
     );
     return (
       <div className="clearfix">
-        <Card extra={extraAction}>
+        <Card extra={extraAction} title="参赛列表">
           <Table
             dataSource={list}
             columns={columns}

@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: '票吧后台管理系统',
   pwa: false,
   iconfontUrl: '',
 };

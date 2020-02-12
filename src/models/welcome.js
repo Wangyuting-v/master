@@ -14,7 +14,7 @@ export default {
     *search({ payload = {} }, { call, put }) {
       const data = yield call(welcomeService.search, payload);
 
-      if (payload.putArea) {
+      if (payload.putArea === 'BANNER') {
         yield put({
           type: 'saveBanner',
           payload: data,

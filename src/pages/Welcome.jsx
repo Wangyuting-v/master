@@ -54,8 +54,9 @@ class PicturesWall extends React.Component {
     const { pageSize, currentPage } = this.state;
     dispatch({
       type: 'welcome/search',
-      payload: { pageSize: pageSize, currentPage: currentPage },
+      payload: { pageSize: pageSize, currentPage: currentPage, putArea: 'HOME' },
     });
+
     dispatch({
       type: 'welcome/search',
       payload: { pageSize: pageSize, currentPage: currentPage, putArea: 'BANNER' },
@@ -82,15 +83,17 @@ class PicturesWall extends React.Component {
       let result;
       if (type == 'edit') {
         const params = {
-          name: inputText,
+          content: inputText,
           type: 'TXT',
+          putArea: 'HOME',
           id,
         };
         result = getServerByput('/ads', params);
       } else {
         const params = {
-          name: inputText,
+          content: inputText,
           type: 'TXT',
+          putArea: 'HOME',
         };
         result = getServerBySsoLogout('/ads', params);
       }
@@ -178,11 +181,13 @@ class PicturesWall extends React.Component {
     return [
       {
         title: '内容',
-        dataIndex: 'name',
+        dataIndex: 'content',
+        width: '80%',
         key: 'name',
       },
       {
         title: '操作',
+        width: '20%',
         dataIndex: 'id',
         render: (val, record) => {
           return (
@@ -194,17 +199,19 @@ class PicturesWall extends React.Component {
                     that.setState(
                       {
                         defaultDetail: record,
+                        inputText: record.content,
                       },
                       () => {
                         const inputUpdate = (
                           <div>
                             <TextArea
                               rows={4}
-                              defaultValue={that.state.defaultDetail.name}
+                              defaultValue={that.state.defaultDetail.content}
                               onChange={that.inputBoxChage}
                             />
                           </div>
                         );
+
                         Modal.confirm({
                           title: '请编辑广告文本',
                           content: inputUpdate,
@@ -281,6 +288,7 @@ class PicturesWall extends React.Component {
   render() {
     const { list, current, pageSize, total } = this.props.welcome;
     const { previewVisible, previewImage, fileList, defaultDetail } = this.state;
+    console.log('welcome---', this.props.welcome);
     const uploadButton = (
       <div>
         <Icon type="plus" />

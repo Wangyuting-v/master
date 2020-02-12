@@ -12,6 +12,7 @@ import {
   message,
   Icon,
   Upload,
+  Alert,
 } from 'antd';
 import { Link, routerRedux } from 'dva/router';
 import { connect } from 'dva';
@@ -224,7 +225,7 @@ class TeamList extends React.Component {
     );
     return (
       <div className="clearfix">
-        <Card extra={extraAction}>
+        <Card extra={extraAction} title="参与队伍列表">
           <Table
             dataSource={list}
             columns={columns}
