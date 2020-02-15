@@ -225,7 +225,7 @@ class TeamList extends React.Component {
     );
     return (
       <div className="clearfix">
-        <Card extra={extraAction} title="参与队伍列表">
+        <Card extra={extraAction} title="参赛队伍列表">
           <Table
             dataSource={list}
             columns={columns}
@@ -241,24 +241,24 @@ class TeamList extends React.Component {
         </Card>
         <Modal
           visible={visible}
-          title={type === 'add' ? '新增赛区' : '编辑赛区'}
+          title={type === 'add' ? '新增队伍信息' : '编辑队伍信息'}
           onCancel={this.hideModal}
           footer={null}
         >
           <Form>
-            <Form.Item label="标题" {...formItem}>
+            <Form.Item label="队伍名称" {...formItem}>
               {getFieldDecorator('name', {
-                rules: [{ required: true, message: '请输入赛区标题' }],
+                rules: [{ required: true, message: '请输入队伍名称' }],
               })(<Input placeholder="请输入" />)}
             </Form.Item>
             <Form.Item label="描述" {...formItem}>
               {getFieldDecorator('intro', {
-                rules: [{ required: true, message: '请输入赛区描述' }],
+                rules: [{ required: true, message: '请输入队伍描述' }],
               })(<Input.TextArea placeholder="请输入" rows={4} />)}
             </Form.Item>
-            <Form.Item label="头像" {...formItem}>
+            <Form.Item label="队伍图片" {...formItem}>
               {getFieldDecorator('headImgUrl', {
-                rules: [{ required: false, message: '请上传赛区头像' }],
+                rules: [{ required: false, message: '请上传队伍图片' }],
               })(
                 <div>
                   <Upload

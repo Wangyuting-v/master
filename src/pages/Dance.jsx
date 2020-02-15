@@ -140,13 +140,13 @@ class DanceList extends React.Component {
   render() {
     const columns = [
       {
-        title: '头像',
+        title: '赛区图片',
         dataIndex: 'headImgUrl',
         key: 'headImgUrl',
         render: val => <img src={val} alt="1" width="50px" height="50px" />,
       },
       {
-        title: '投票标题',
+        title: '赛区名称',
         dataIndex: 'name',
         key: 'name',
       },
@@ -227,7 +227,7 @@ class DanceList extends React.Component {
     );
     return (
       <div className="clearfix">
-        <Card extra={extraAction} title="参赛列表">
+        <Card extra={extraAction} title="投票列表">
           <Table
             dataSource={list}
             columns={columns}
@@ -248,9 +248,9 @@ class DanceList extends React.Component {
           footer={null}
         >
           <Form>
-            <Form.Item label="标题" {...formItem}>
+            <Form.Item label="赛区名称" {...formItem}>
               {getFieldDecorator('name', {
-                rules: [{ required: true, message: '请输入赛区标题' }],
+                rules: [{ required: true, message: '请输入赛区名称' }],
               })(<Input placeholder="请输入" />)}
             </Form.Item>
             <Form.Item label="描述" {...formItem}>
@@ -258,9 +258,9 @@ class DanceList extends React.Component {
                 rules: [{ required: true, message: '请输入赛区描述' }],
               })(<Input.TextArea placeholder="请输入" rows={4} />)}
             </Form.Item>
-            <Form.Item label="头像" {...formItem}>
+            <Form.Item label="赛区图片" {...formItem}>
               {getFieldDecorator('headImgUrl', {
-                rules: [{ required: false, message: '请上传赛区头像' }],
+                rules: [{ required: false, message: '请上传赛区图片' }],
               })(
                 <div>
                   <Upload
