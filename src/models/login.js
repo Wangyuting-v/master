@@ -10,33 +10,42 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      }); // Login successfully
+      const response1 = yield call(fakeAccountLogin, payload);
+      const { code, data, message, success } = response1;
 
-      if (response.status === 'ok') {
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        let { redirect } = params;
+      if (success) {
+        const response = {
+          currentAuthority: 'admin',
+          status: 'ok',
+          type: 'account',
+        };
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        });
+        console.log('response--------', response);
+        if (response.status === 'ok') {
+          const urlParams = new URL(window.location.href);
+          const params = getPageQuery();
+          let { redirect } = params;
 
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
+          if (redirect) {
+            const redirectUrlParams = new URL(redirect);
 
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
+            if (redirectUrlParams.origin === urlParams.origin) {
+              redirect = redirect.substr(urlParams.origin.length);
 
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
+              if (redirect.match(/^\/.*#/)) {
+                redirect = redirect.substr(redirect.indexOf('#') + 1);
+              }
+            } else {
+              window.location.href = '/';
+              return;
             }
-          } else {
-            window.location.href = '/';
-            return;
           }
-        }
 
-        router.replace(redirect || '/');
+          router.replace(redirect || '/');
+        }
       }
     },
 

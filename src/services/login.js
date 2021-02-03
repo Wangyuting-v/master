@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+  return request('http://122.51.140.39:2435/sysUser/login', {
     method: 'POST',
     data: params,
   });
