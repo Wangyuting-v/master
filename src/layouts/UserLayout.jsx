@@ -41,11 +41,11 @@ const UserLayout = props => {
           <div className={styles.top}>
             <div className={styles.header}>
               <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>票吧后台管理系统</span>
+                {/* <img alt="logo" className={styles.logo} src={logo} /> */}
+                <span className={styles.title}>柘城邮政新钱预约后台管理系统</span>
               </Link>
             </div>
-            <div className={styles.desc}>专注于中国邮政柘城分行的广告和赛区管理</div>
+            {/* <div className={styles.desc}>专注于中国邮政柘城分行的广告和赛区管理</div> */}
           </div>
           {children}
         </div>

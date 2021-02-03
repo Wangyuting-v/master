@@ -1,6 +1,5 @@
 export default {
   navTheme: 'dark',
-  // 拂晓蓝
   primaryColor: 'daybreak',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
@@ -11,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '票吧后台管理系统',
+  title: '柘城邮政新钱预约',
   pwa: false,
   iconfontUrl: '',
 };

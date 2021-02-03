@@ -21,32 +21,38 @@ const router = [
         routes: [
           {
             path: '/',
-            redirect: '/welcome',
+            redirect: '/userList',
           },
           {
-            path: '/welcome',
-            name: '广告管理',
+            path: '/userList',
+            name: '用户列表',
             icon: 'smile',
-            component: './Welcome',
+            component: './userList',
           },
-          {
-            path: '/dancer',
-            name: '投票管理',
-            icon: 'heart',
-            routes: [
-              {
-                path: '/dancer/manager',
-                name: '投票列表',
-                component: './Dance',
-              },
-              {
-                path: '/dancer/detail/:id',
-                name: '投票详情',
-                component: './DanceDetail',
-                hideInMenu: true,
-              },
-            ],
-          },
+          // {
+          //   path: '/welcome',
+          //   name: '广告管理',
+          //   icon: 'smile',
+          //   component: './Welcome',
+          // },
+          // {
+          //   path: '/dancer',
+          //   name: '投票管理',
+          //   icon: 'heart',
+          //   routes: [
+          //     {
+          //       path: '/dancer/manager',
+          //       name: '投票列表',
+          //       component: './Dance',
+          //     },
+          //     {
+          //       path: '/dancer/detail/:id',
+          //       name: '投票详情',
+          //       component: './DanceDetail',
+          //       hideInMenu: true,
+          //     },
+          //   ],
+          // },
           {
             component: './404',
           },

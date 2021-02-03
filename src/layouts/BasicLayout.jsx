@@ -12,7 +12,7 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../../public/favicon.jpeg';
 const noMatch = (
   <Result
     status="403"
@@ -35,7 +35,7 @@ const menuDataRender = menuList =>
     return Authorized.check(item.authority, localItem, null);
   });
 
-const defaultFooterDom = <DefaultFooter copyright="2020 中国邮政柘城分行" links={[]} />;
+const defaultFooterDom = <DefaultFooter copyright="2021 中国邮政柘城分行" links={[]} />;
 
 const footerRender = () => {
   if (!isAntDesignPro()) {
