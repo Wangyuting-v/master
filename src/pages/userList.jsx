@@ -139,7 +139,7 @@ class PicturesWall extends React.Component {
       spinning: true,
     });
     const { formValues } = this.state;
-    const url = `http://192.168.24.79:2435/appointmentInfo/export?${this.params(formValues)}`;
+    const url = `http://122.51.140.39:2435/appointmentInfo/export?${this.params(formValues)}`;
     window.open(url);
     // getServerByExpont('http://192.168.24.79:2435/appointmentInfo/export', formValues)
     //   .then(() => {
