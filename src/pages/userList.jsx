@@ -50,10 +50,19 @@ class PicturesWall extends React.Component {
 
   seachDancer = () => {
     const { dispatch } = this.props;
-    const { pageSize, currentPage } = this.state;
+    const { pageSize, currentPage, formValues } = this.state;
+    const fieldsValue = Object.assign(
+      formValues ? formValues : {},
+      {
+        pageSize: pageSize,
+      },
+      {
+        currentPage: currentPage,
+      },
+    );
     dispatch({
       type: 'userList/search',
-      payload: { pageSize: pageSize, currentPage: currentPage },
+      payload: fieldsValue,
     });
   };
 
@@ -109,29 +118,44 @@ class PicturesWall extends React.Component {
     });
   };
 
+  // 参数处理
+  params(obj) {
+    let result = '';
+    let item;
+    for (item in obj) {
+      if ((obj[item] && String(obj[item])) || String(obj[item]) == 'false') {
+        result += `&${item}=${obj[item]}`;
+      }
+    }
+    if (result) {
+      result = result.slice(1);
+    }
+    return result;
+  }
+
   //导出
   handleExport = e => {
     this.setState({
       spinning: true,
     });
-    const { searchQuery } = this.props;
     const { formValues } = this.state;
-    console.log('导出的参数呀呀呀呀呀----', formValues);
-    getServerByExpont('http://192.168.24.79:2435/appointmentInfo/export', formValues)
-      .then(() => {
-        setTimeout(() => {
-          this.setState({
-            spinning: false,
-          });
-        }, 2500);
-      })
-      .catch(() => {
-        setTimeout(() => {
-          this.setState({
-            spinning: false,
-          });
-        }, 2500);
-      });
+    const url = `http://192.168.24.79:2435/appointmentInfo/export?${this.params(formValues)}`;
+    window.open(url);
+    // getServerByExpont('http://192.168.24.79:2435/appointmentInfo/export', formValues)
+    //   .then(() => {
+    //     setTimeout(() => {
+    //       this.setState({
+    //         spinning: false,
+    //       });
+    //     }, 2500);
+    //   })
+    //   .catch(() => {
+    //     setTimeout(() => {
+    //       this.setState({
+    //         spinning: false,
+    //       });
+    //     }, 2500);
+    //   });
   };
 
   handleSearch = e => {
@@ -175,7 +199,7 @@ class PicturesWall extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline" name="hahah">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        <Row gutter={{ md: 10, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
             <FormItem label="姓名">
               {getFieldDecorator('username')(<Input placeholder="请输入姓名" />)}
@@ -207,9 +231,12 @@ class PicturesWall extends React.Component {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="申请时间">
-              {getFieldDecorator('createTime')(<RangePicker style={{ width: '100%' }} />)}
+        </Row>
+
+        <Row gutter={{ md: 10, lg: 24, xl: 48 }}>
+          <Col md={10} sm={24}>
+            <FormItem label="预约时间">
+              {getFieldDecorator('createTime')(<RangePicker style={{ width: '90%' }} />)}
             </FormItem>
           </Col>
         </Row>
@@ -235,7 +262,6 @@ class PicturesWall extends React.Component {
   render() {
     const { list, current, pageSize, total } = this.props.userList;
     const { previewVisible, previewImage, fileList, defaultDetail } = this.state;
-    console.log('welcome---', this.props.welcome);
     return (
       <div>
         <div>{this.renderForm()}</div>

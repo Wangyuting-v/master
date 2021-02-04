@@ -23,6 +23,7 @@ const UserModel = {
   },
   reducers: {
     saveCurrentUser(state, action) {
+      localStorage.setItem('userid', action.payload.userid);
       return { ...state, currentUser: action.payload || {} };
     },
 

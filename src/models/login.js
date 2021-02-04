@@ -12,7 +12,6 @@ const Model = {
     *login({ payload }, { call, put }) {
       const response1 = yield call(fakeAccountLogin, payload);
       const { code, data, message, success } = response1;
-
       if (success) {
         const response = {
           currentAuthority: 'admin',
@@ -55,7 +54,7 @@ const Model = {
 
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-
+      localStorage.removeItem('userid');
       if (window.location.pathname !== '/user/login' && !redirect) {
         router.replace({
           pathname: '/user/login',
