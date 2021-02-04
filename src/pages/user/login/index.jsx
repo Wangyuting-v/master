@@ -27,6 +27,9 @@ class Login extends Component {
         type: 'login/login',
         payload: { ...values, type },
       });
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
     }
   };
   onTabChange = type => {
@@ -126,7 +129,6 @@ class Login extends Component {
               ]}
               onPressEnter={e => {
                 e.preventDefault();
-
                 if (this.loginForm) {
                   this.loginForm.validateFields(this.handleSubmit);
                 }
@@ -221,7 +223,8 @@ class Login extends Component {
   }
 }
 
-export default connect(({ login, loading }) => ({
+export default connect(({ user, login, loading }) => ({
   userLogin: login,
+  user,
   submitting: loading.effects['login/login'],
 }))(Login);

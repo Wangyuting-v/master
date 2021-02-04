@@ -18,12 +18,15 @@ import {
   Tooltip,
   Input,
   Divider,
+  DatePicker,
   message,
 } from 'antd';
 const FormItem = Form.Item;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
+import moment from 'moment';
 import styles from './Welcome.less';
-import { getServerBySsoLogout, getServerBydelete, getServerByput } from '../services/getServerData';
+import { getServerByExpont } from '../services/getServerData';
 
 @connect(({ userList }) => ({
   userList,
@@ -71,6 +74,7 @@ class PicturesWall extends React.Component {
       {
         title: '预约时间',
         dataIndex: 'createTime',
+        render: text => (text ? <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span> : ''),
       },
       {
         title: '10面值张数',
@@ -105,14 +109,54 @@ class PicturesWall extends React.Component {
     });
   };
 
+  //导出
+  handleExport = e => {
+    this.setState({
+      spinning: true,
+    });
+    const { searchQuery } = this.props;
+    const { formValues } = this.state;
+    console.log('导出的参数呀呀呀呀呀----', formValues);
+    getServerByExpont('http://192.168.24.79:2435/appointmentInfo/export', formValues)
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            spinning: false,
+          });
+        }, 2500);
+      })
+      .catch(() => {
+        setTimeout(() => {
+          this.setState({
+            spinning: false,
+          });
+        }, 2500);
+      });
+  };
+
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log('数据啊：', fieldsValue);
+      let fieldsValues = fieldsValue;
+      if (fieldsValue.createTime && fieldsValue.createTime.length > 0) {
+        fieldsValues = Object.assign(
+          fieldsValue,
+          {
+            startCreateTime: moment(
+              moment(fieldsValue.createTime[0]).format('YYYY-MM-DD 00:00:00'),
+            ).valueOf(),
+          },
+          {
+            endCreateTime: moment(
+              moment(fieldsValue.createTime[1]).format('YYYY-MM-DD 23:59:59'),
+            ).valueOf(),
+          },
+        );
+      }
       const values = {
-        ...fieldsValue,
+        ...fieldsValues,
         // updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
 
@@ -132,17 +176,17 @@ class PicturesWall extends React.Component {
     return (
       <Form onSubmit={this.handleSearch} layout="inline" name="hahah">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
+          <Col md={6} sm={24}>
             <FormItem label="姓名">
               {getFieldDecorator('username')(<Input placeholder="请输入姓名" />)}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          <Col md={6} sm={24}>
             <FormItem label="手机号">
               {getFieldDecorator('mobile')(<Input placeholder="请输入手机号" />)}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          <Col md={6} sm={24}>
             <FormItem label="网点">
               {getFieldDecorator('address')(
                 <Select placeholder="请选择网点" style={{ width: 180 }}>
@@ -163,12 +207,20 @@ class PicturesWall extends React.Component {
               )}
             </FormItem>
           </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="申请时间">
+              {getFieldDecorator('createTime')(<RangePicker style={{ width: '100%' }} />)}
+            </FormItem>
+          </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right', marginTop: '10px' }}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit" disabled={this.props.loading}>
                 查询
+              </Button>
+              <Button type="primary" onClick={this.handleExport} style={{ marginLeft: 8 }}>
+                导出
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置

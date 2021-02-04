@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import requestExpon from '../utils/request3';
 import requestBySso from '../utils/requestBySso';
 
 function obj2params(obj) {
@@ -25,20 +26,23 @@ function obj2paramsarr(key, arr) {
   return result;
 }
 
-// export async function getServerByget(url) {
-//   let resp = await request(url);
-//   if (resp.code !== undefined && resp.code !== undefined) {
-//     resp = resp.data || {};
-//   }
-//   return resp;
-// }
-
 export async function getServerByGet(url, data) {
   let resp;
   if (obj2params(data)) {
     resp = await request(`${url}?${obj2params(data)}`);
   } else {
     resp = await request(url);
+  }
+
+  return resp;
+}
+
+export async function getServerByExpont(url, data) {
+  let resp;
+  if (obj2params(data)) {
+    resp = await requestExpon(`${url}?${obj2params(data)}`);
+  } else {
+    resp = await requestExpon(url);
   }
 
   return resp;
@@ -66,17 +70,6 @@ export async function getServerBydelete(url, data) {
   });
   return resp;
 }
-
-// export async function getServerByExpont(url, data) {
-//   let resp;
-//   if (obj2params(data)) {
-//     resp = await requestExpon(`${url}?${obj2params(data)}`);
-//   } else {
-//     resp = await requestExpon(url);
-//   }
-//
-//   return resp;
-// }
 
 export async function getServerBySsoLogout(url, data) {
   const resp = await requestBySso(url, {
