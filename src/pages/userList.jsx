@@ -233,7 +233,7 @@ class PicturesWall extends React.Component {
           </Col>
           <Col md={6} sm={24}>
             <FormItem label="时间">
-              {getFieldDecorator('createTime')(<RangePicker style={{ width: 200 }} />)}
+              {getFieldDecorator('createTime')(<RangePicker style={{ width: 180 }} />)}
             </FormItem>
           </Col>
         </Row>
