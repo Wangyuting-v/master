@@ -231,12 +231,9 @@ class PicturesWall extends React.Component {
               )}
             </FormItem>
           </Col>
-        </Row>
-
-        <Row gutter={{ md: 10, lg: 24, xl: 48 }}>
-          <Col md={10} sm={24}>
-            <FormItem label="预约时间">
-              {getFieldDecorator('createTime')(<RangePicker style={{ width: '90%' }} />)}
+          <Col md={6} sm={24}>
+            <FormItem label="时间">
+              {getFieldDecorator('createTime')(<RangePicker style={{ width: 200 }} />)}
             </FormItem>
           </Col>
         </Row>
