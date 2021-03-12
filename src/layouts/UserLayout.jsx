@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 import SelectLang from '@/components/SelectLang';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.jpg';
 import styles from './UserLayout.less';
 
 const UserLayout = props => {
@@ -42,7 +42,7 @@ const UserLayout = props => {
             <div className={styles.header}>
               <Link to="/">
                 {/* <img alt="logo" className={styles.logo} src={logo} /> */}
-                <span className={styles.title}>柘城邮政新钱预约后台管理系统</span>
+                <span className={styles.title}>提香公馆后台管理系统</span>
               </Link>
             </div>
             {/* <div className={styles.desc}>专注于中国邮政柘城分行的广告和赛区管理</div> */}

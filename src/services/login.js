@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 export async function fakeAccountLogin(params) {
-  return request('http://122.51.140.39:2435/sysUser/login', {
+  return request('https://titian.sugercd.com/user/login', {
     method: 'POST',
     data: params,
   });

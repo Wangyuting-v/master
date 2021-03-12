@@ -10,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '柘城邮政新钱预约',
+  title: '提香公馆',
   pwa: false,
   iconfontUrl: '',
 };

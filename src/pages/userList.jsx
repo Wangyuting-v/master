@@ -10,16 +10,10 @@ import {
   Form,
   Col,
   Button,
-  Upload,
-  Icon,
   Select,
-  Modal,
   Table,
-  Tooltip,
   Input,
-  Divider,
   DatePicker,
-  message,
 } from 'antd';
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -70,36 +64,19 @@ class PicturesWall extends React.Component {
     return [
       {
         title: '姓名',
-        dataIndex: 'username',
+        dataIndex: 'userName',
       },
       {
         title: '手机号',
         dataIndex: 'mobile',
       },
       {
-        title: '网点',
-        dataIndex: 'address',
+        title: '转发次数',
+        dataIndex: 'shareCount',
       },
       {
-        title: '预约时间',
-        dataIndex: 'createTime',
-        render: text => (text ? <span>{moment(text).format('YYYY-MM-DD HH:mm')}</span> : ''),
-      },
-      {
-        title: '10面值张数',
-        dataIndex: 'tenCount',
-      },
-      {
-        title: '20面值张数',
-        dataIndex: 'twentyCount',
-      },
-      {
-        title: '50面值张数',
-        dataIndex: 'fiftyCount',
-      },
-      {
-        title: '100面值张数',
-        dataIndex: 'oneHundredCount',
+        title: 'userCode',
+        dataIndex: 'userCode',
       },
     ];
   }
@@ -139,23 +116,9 @@ class PicturesWall extends React.Component {
       spinning: true,
     });
     const { formValues } = this.state;
-    const url = `http://122.51.140.39:2435/appointmentInfo/export?${this.params(formValues)}`;
+    const url = `https://titian.sugercd.com/user/export?${this.params(formValues)}`;
+    console.log('url----',url);
     window.open(url);
-    // getServerByExpont('http://192.168.24.79:2435/appointmentInfo/export', formValues)
-    //   .then(() => {
-    //     setTimeout(() => {
-    //       this.setState({
-    //         spinning: false,
-    //       });
-    //     }, 2500);
-    //   })
-    //   .catch(() => {
-    //     setTimeout(() => {
-    //       this.setState({
-    //         spinning: false,
-    //       });
-    //     }, 2500);
-    //   });
   };
 
   handleSearch = e => {
@@ -164,21 +127,6 @@ class PicturesWall extends React.Component {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       let fieldsValues = fieldsValue;
-      if (fieldsValue.createTime && fieldsValue.createTime.length > 0) {
-        fieldsValues = Object.assign(
-          fieldsValue,
-          {
-            startCreateTime: moment(
-              moment(fieldsValue.createTime[0]).format('YYYY-MM-DD 00:00:00'),
-            ).valueOf(),
-          },
-          {
-            endCreateTime: moment(
-              moment(fieldsValue.createTime[1]).format('YYYY-MM-DD 23:59:59'),
-            ).valueOf(),
-          },
-        );
-      }
       const values = {
         ...fieldsValues,
         // updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
@@ -202,7 +150,7 @@ class PicturesWall extends React.Component {
         <Row gutter={{ md: 10, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
             <FormItem label="姓名">
-              {getFieldDecorator('username')(<Input placeholder="请输入姓名" />)}
+              {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
@@ -211,29 +159,8 @@ class PicturesWall extends React.Component {
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
-            <FormItem label="网点">
-              {getFieldDecorator('address')(
-                <Select placeholder="请选择网点" style={{ width: 180 }}>
-                  <Option value="文庙">文庙</Option>
-                  <Option value="工业">工业</Option>
-                  <Option value="春水">春水</Option>
-                  <Option value="汇泉">汇泉</Option>
-                  <Option value="未来">未来</Option>
-                  <Option value="陈青集">陈青集</Option>
-                  <Option value="起台">起台</Option>
-                  <Option value="远襄">远襄</Option>
-                  <Option value="慈圣">慈圣</Option>
-                  <Option value="伯岗">伯岗</Option>
-                  <Option value="申桥">申桥</Option>
-                  <Option value="李原">李原</Option>
-                  <Option value="安平">安平</Option>
-                </Select>,
-              )}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem label="时间">
-              {getFieldDecorator('createTime')(<RangePicker style={{ width: 180 }} />)}
+            <FormItem label="userCode">
+              {getFieldDecorator('userCode')(<Input placeholder="请输入userCode" />)}
             </FormItem>
           </Col>
         </Row>

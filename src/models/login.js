@@ -3,6 +3,7 @@ import { router } from 'umi';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import {message} from 'antd';
 const Model = {
   namespace: 'login',
   state: {
@@ -11,7 +12,7 @@ const Model = {
   effects: {
     *login({ payload }, { call, put }) {
       const response1 = yield call(fakeAccountLogin, payload);
-      const { code, data, message, success } = response1;
+      const { code, data, message:messages, success } = response1;
       if (success) {
         const response = {
           currentAuthority: 'admin',
@@ -27,13 +28,10 @@ const Model = {
           const urlParams = new URL(window.location.href);
           const params = getPageQuery();
           let { redirect } = params;
-
           if (redirect) {
             const redirectUrlParams = new URL(redirect);
-
             if (redirectUrlParams.origin === urlParams.origin) {
               redirect = redirect.substr(urlParams.origin.length);
-
               if (redirect.match(/^\/.*#/)) {
                 redirect = redirect.substr(redirect.indexOf('#') + 1);
               }
@@ -45,6 +43,8 @@ const Model = {
 
           router.replace(redirect || '/');
         }
+      }else{
+        message.error(messages);
       }
     },
 
